@@ -21,15 +21,98 @@ const Index = () => {
     setMessages((prev) => [...prev, userMessage]);
     setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const aiMessage: Message = {
-        role: "assistant",
-        content: "This is a demo response! To connect real AI capabilities, you can integrate with AI services using Lovable Cloud. I can help you set that up whenever you're ready!",
-      };
-      setMessages((prev) => [...prev, aiMessage]);
+    try {
+      const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
+      
+      const resp = await fetch(CHAT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({ messages: [...messages, userMessage] }),
+      });
+
+      if (!resp.ok) {
+        if (resp.status === 429) {
+          toast({
+            title: "Rate Limit",
+            description: "Too many requests. Please try again later.",
+            variant: "destructive",
+          });
+        } else if (resp.status === 402) {
+          toast({
+            title: "Payment Required",
+            description: "Please add credits to continue using AI features.",
+            variant: "destructive",
+          });
+        } else {
+          throw new Error("Failed to get response");
+        }
+        setIsTyping(false);
+        return;
+      }
+
+      if (!resp.body) throw new Error("No response body");
+
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let textBuffer = "";
+      let assistantContent = "";
+
+      // Add empty assistant message that we'll update
+      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        textBuffer += decoder.decode(value, { stream: true });
+
+        let newlineIndex: number;
+        while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
+          let line = textBuffer.slice(0, newlineIndex);
+          textBuffer = textBuffer.slice(newlineIndex + 1);
+
+          if (line.endsWith("\r")) line = line.slice(0, -1);
+          if (line.startsWith(":") || line.trim() === "") continue;
+          if (!line.startsWith("data: ")) continue;
+
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === "[DONE]") break;
+
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+            if (content) {
+              assistantContent += content;
+              setMessages((prev) => {
+                const newMessages = [...prev];
+                const lastMsg = newMessages[newMessages.length - 1];
+                if (lastMsg?.role === "assistant") {
+                  lastMsg.content = assistantContent;
+                }
+                return newMessages;
+              });
+            }
+          } catch {
+            // Incomplete JSON, will be completed in next chunk
+            textBuffer = line + "\n" + textBuffer;
+            break;
+          }
+        }
+      }
+
       setIsTyping(false);
-    }, 1500);
+    } catch (error) {
+      console.error("Error:", error);
+      toast({
+        title: "Error",
+        description: "Failed to get AI response. Please try again.",
+        variant: "destructive",
+      });
+      setIsTyping(false);
+    }
   };
 
   const handlePromptSelect = (prompt: string) => {
@@ -80,7 +163,7 @@ const Index = () => {
         <div className="container py-4">
           <ChatInput onSend={handleSendMessage} disabled={isTyping} />
           <p className="mt-2 text-center text-xs text-muted-foreground">
-            This is a demo interface. Connect real AI to unlock full capabilities.
+            Powered by Lovable AI
           </p>
         </div>
       </footer>
