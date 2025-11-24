@@ -60,7 +60,7 @@ const Index = () => {
       let textBuffer = "";
       let assistantContent = "";
 
-      // Add empty assistant message that we'll update
+  
       setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
       while (true) {
@@ -96,7 +96,6 @@ const Index = () => {
               });
             }
           } catch {
-            // Incomplete JSON, will be completed in next chunk
             textBuffer = line + "\n" + textBuffer;
             break;
           }
@@ -128,7 +127,7 @@ const Index = () => {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-ai-gradient">
               <Sparkles className="h-5 w-5 text-primary-foreground" />
             </div>
-            <h1 className="text-xl font-semibold text-foreground">AI Assistant</h1>
+            <h1 className="text-xl font-semibold text-foreground">EH AI</h1>
           </div>
         </div>
       </header>
@@ -163,7 +162,7 @@ const Index = () => {
         <div className="container py-4">
           <ChatInput onSend={handleSendMessage} disabled={isTyping} />
           <p className="mt-2 text-center text-xs text-muted-foreground">
-            Powered by Lovable AI
+            Ejo Hazaza AI
           </p>
         </div>
       </footer>
