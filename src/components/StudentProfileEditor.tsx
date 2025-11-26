@@ -14,7 +14,7 @@ import { Loader2, Plus, Trash2 } from "lucide-react";
 
 const profileSchema = z.object({
   bio: z.string().max(500).optional(),
-  university: z.string().max(200).optional(),
+  school: z.string().max(200).optional(),
   major: z.string().max(200).optional(),
   graduation_year: z.number().min(2020).max(2040).optional().nullable(),
   gpa: z.number().min(0).max(4.0).optional().nullable(),
@@ -52,7 +52,7 @@ export const StudentProfileEditor = () => {
     resolver: zodResolver(profileSchema),
     defaultValues: {
       bio: "",
-      university: "",
+      school: "",
       major: "",
       graduation_year: null,
       gpa: null,
@@ -92,7 +92,7 @@ export const StudentProfileEditor = () => {
     if (data) {
       profileForm.reset({
         bio: data.bio || "",
-        university: data.university || "",
+        school: data.school || "",
         major: data.major || "",
         graduation_year: data.graduation_year,
         gpa: data.gpa,
@@ -131,7 +131,7 @@ export const StudentProfileEditor = () => {
         .upsert({
           user_id: user.id,
           bio: data.bio || null,
-          university: data.university || null,
+          school: data.school || null,
           major: data.major || null,
           graduation_year: data.graduation_year,
           gpa: data.gpa,
@@ -254,12 +254,12 @@ export const StudentProfileEditor = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={profileForm.control}
-                      name="university"
+                      name="school"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>University</FormLabel>
+                          <FormLabel>School</FormLabel>
                           <FormControl>
-                            <Input placeholder="University name" {...field} />
+                            <Input placeholder="School name" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
