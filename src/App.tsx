@@ -9,6 +9,7 @@ import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import AIAssistant from "./pages/AIAssistant";
+import StudentProfile from "./pages/StudentProfile";
 import NotFound from "./pages/NotFound";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -71,6 +72,7 @@ const App = () => {
               <>
                 <Route path="/dashboard" element={<AppLayout><Dashboard /></AppLayout>} />
                 <Route path="/ai-assistant" element={<AppLayout><AIAssistant /></AppLayout>} />
+                <Route path="/profile" element={<AppLayout><StudentProfile /></AppLayout>} />
                 <Route path="*" element={<AppLayout><NotFound /></AppLayout>} />
               </>
             ) : (
