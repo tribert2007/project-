@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Home, Users, MessageSquare, Award, Briefcase, GraduationCap, Sparkles, LogOut } from "lucide-react";
+import { Home, Users, MessageSquare, Award, Briefcase, GraduationCap, Sparkles, LogOut, Mail } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -22,14 +22,16 @@ type UserRole = "student" | "job_giver" | "mentor";
 const studentItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "My Profile", url: "/profile", icon: GraduationCap },
-  { title: "Find Mentors", url: "/mentors", icon: Award },
+  { title: "Interview Requests", url: "/interview-requests", icon: Mail },
   { title: "Messages", url: "/messages", icon: MessageSquare },
+  { title: "Find Mentors", url: "/mentors", icon: Award },
   { title: "AI Assistant", url: "/ai-assistant", icon: Sparkles },
 ];
 
 const jobGiverItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "Browse Students", url: "/students", icon: Users },
+  { title: "Interview Requests", url: "/interview-requests", icon: Mail },
   { title: "Messages", url: "/messages", icon: MessageSquare },
   { title: "AI Assistant", url: "/ai-assistant", icon: Sparkles },
 ];

@@ -303,8 +303,8 @@ export type Database = {
           linkedin_url: string | null
           major: string | null
           portfolio_url: string | null
+          school: string | null
           skills: string[] | null
-          university: string | null
           updated_at: string | null
           user_id: string
         }
@@ -317,8 +317,8 @@ export type Database = {
           linkedin_url?: string | null
           major?: string | null
           portfolio_url?: string | null
+          school?: string | null
           skills?: string[] | null
-          university?: string | null
           updated_at?: string | null
           user_id: string
         }
@@ -331,8 +331,8 @@ export type Database = {
           linkedin_url?: string | null
           major?: string | null
           portfolio_url?: string | null
+          school?: string | null
           skills?: string[] | null
-          university?: string | null
           updated_at?: string | null
           user_id?: string
         }

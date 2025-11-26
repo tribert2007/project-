@@ -10,6 +10,9 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import AIAssistant from "./pages/AIAssistant";
 import StudentProfile from "./pages/StudentProfile";
+import Messages from "./pages/Messages";
+import Chat from "./pages/Chat";
+import InterviewRequests from "./pages/InterviewRequests";
 import NotFound from "./pages/NotFound";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -73,6 +76,9 @@ const App = () => {
                 <Route path="/dashboard" element={<AppLayout><Dashboard /></AppLayout>} />
                 <Route path="/ai-assistant" element={<AppLayout><AIAssistant /></AppLayout>} />
                 <Route path="/profile" element={<AppLayout><StudentProfile /></AppLayout>} />
+                <Route path="/messages" element={<AppLayout><Messages /></AppLayout>} />
+                <Route path="/chat/:conversationId" element={<AppLayout><Chat /></AppLayout>} />
+                <Route path="/interview-requests" element={<AppLayout><InterviewRequests /></AppLayout>} />
                 <Route path="*" element={<AppLayout><NotFound /></AppLayout>} />
               </>
             ) : (
