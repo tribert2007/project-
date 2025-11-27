@@ -15,6 +15,8 @@ import MentorProfile from "./pages/MentorProfile";
 import Messages from "./pages/Messages";
 import Chat from "./pages/Chat";
 import InterviewRequests from "./pages/InterviewRequests";
+import FindMentor from "./pages/FindMentor";
+import ViewStudentProfile from "./pages/ViewStudentProfile";
 import NotFound from "./pages/NotFound";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -83,6 +85,8 @@ const App = () => {
                 <Route path="/messages" element={<AppLayout><Messages /></AppLayout>} />
                 <Route path="/chat/:conversationId" element={<AppLayout><Chat /></AppLayout>} />
                 <Route path="/interview-requests" element={<AppLayout><InterviewRequests /></AppLayout>} />
+                <Route path="/find-mentor" element={<AppLayout><FindMentor /></AppLayout>} />
+                <Route path="/student-profile/:id" element={<AppLayout><ViewStudentProfile /></AppLayout>} />
                 <Route path="*" element={<AppLayout><NotFound /></AppLayout>} />
               </>
             ) : (

@@ -107,14 +107,9 @@ const Messages = () => {
     if (role === "student") {
       query = query.in("role", ["job_giver", "mentor"]);
     }
-    // Job givers can see students
-    else if (role === "job_giver") {
+    // Job givers and mentors can see students
+    else if (role === "job_giver" || role === "mentor") {
       query = query.eq("role", "student");
-    }
-    // Mentors don't see anyone (they only get contacted)
-    else if (role === "mentor") {
-      setAvailableUsers([]);
-      return;
     }
 
     const { data } = await query;
@@ -133,6 +128,10 @@ const Messages = () => {
 
       setAvailableUsers(data.filter(u => !conversationUserIds.has(u.id)));
     }
+  };
+
+  const viewProfile = (userId: string) => {
+    navigate(`/student-profile/${userId}`);
   };
 
   const startConversation = async (otherUserId: string) => {
@@ -196,11 +195,7 @@ const Messages = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {availableUsers.map((user) => (
-              <Card
-                key={user.id}
-                className="cursor-pointer hover:bg-muted/50 transition-colors"
-                onClick={() => startConversation(user.id)}
-              >
+              <Card key={user.id} className="hover:bg-muted/50 transition-colors">
                 <CardContent className="pt-6">
                   <div className="flex items-center gap-4">
                     <Avatar>
@@ -215,6 +210,22 @@ const Messages = () => {
                       <Badge variant="secondary" className="mt-1">
                         {user.role.replace("_", " ")}
                       </Badge>
+                      <div className="flex gap-2 mt-3">
+                        {user.role === "student" && currentUserRole !== "student" && (
+                          <button
+                            onClick={() => viewProfile(user.id)}
+                            className="text-xs text-primary hover:underline"
+                          >
+                            View Profile
+                          </button>
+                        )}
+                        <button
+                          onClick={() => startConversation(user.id)}
+                          className="text-xs text-primary hover:underline"
+                        >
+                          Start Chat
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </CardContent>

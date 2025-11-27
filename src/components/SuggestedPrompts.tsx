@@ -8,19 +8,19 @@ interface SuggestedPromptsProps {
 const prompts = [
   {
     icon: Lightbulb,
-    text: "Explain quantum computing in simple terms",
+    text: "How do I find the right job in Rwanda?",
   },
   {
     icon: Code,
-    text: "Help me debug this React component",
+    text: "What skills should I develop for my career?",
   },
   {
     icon: Sparkles,
-    text: "Generate creative ideas for my startup",
+    text: "How can I find a good mentor on this platform?",
   },
   {
     icon: BookOpen,
-    text: "Summarize the latest AI research trends",
+    text: "How do I prepare for job interviews?",
   },
 ];
 

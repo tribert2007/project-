@@ -16,6 +16,11 @@ const AIAssistant = () => {
   const [isTyping, setIsTyping] = useState(false);
   const { toast } = useToast();
 
+  const systemMessage = {
+    role: "system" as const,
+    content: "You are a career guidance AI assistant for Ejo Hazaza Assist, a platform connecting students with job opportunities and mentors in Rwanda. Focus on helping students find jobs, prepare for interviews, build their skills, and connect with mentors who can guide their career development. Provide practical advice about job searching, career planning, and professional growth."
+  };
+
   const handleSendMessage = async (content: string) => {
     const userMessage: Message = { role: "user", content };
     setMessages((prev) => [...prev, userMessage]);
@@ -30,7 +35,7 @@ const AIAssistant = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ messages: [...messages, userMessage] }),
+        body: JSON.stringify({ messages: [systemMessage, ...messages, userMessage] }),
       });
 
       if (!resp.ok) {
