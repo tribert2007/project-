@@ -135,65 +135,66 @@ const Chat = () => {
   }
 
   return (
-    <div className="container max-w-4xl py-8 h-[calc(100vh-8rem)] flex flex-col">
-      <Card className="flex-1 flex flex-col">
-        <CardHeader className="border-b">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate("/messages")}
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <Avatar>
-              <AvatarFallback>
-                {otherUserName.charAt(0).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <CardTitle>{otherUserName}</CardTitle>
-          </div>
-        </CardHeader>
-        
-        <CardContent className="flex-1 overflow-y-auto p-6 space-y-4">
-          {messages.map((message) => (
+    <div className="flex flex-col h-screen">
+      {/* Header */}
+      <div className="border-b bg-card px-6 py-4">
+        <div className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate("/messages")}
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <Avatar>
+            <AvatarFallback>
+              {otherUserName.charAt(0).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <h2 className="text-xl font-semibold text-foreground">{otherUserName}</h2>
+        </div>
+      </div>
+
+      {/* Messages - with bottom padding for fixed input */}
+      <div className="flex-1 overflow-y-auto px-6 py-4 pb-24 space-y-4" ref={messagesEndRef}>
+        {messages.map((message) => (
+          <div
+            key={message.id}
+            className={`flex ${
+              message.sender_id === currentUserId ? "justify-end" : "justify-start"
+            }`}
+          >
             <div
-              key={message.id}
-              className={`flex ${
-                message.sender_id === currentUserId ? "justify-end" : "justify-start"
+              className={`max-w-[70%] rounded-2xl px-4 py-2 ${
+                message.sender_id === currentUserId
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-foreground"
               }`}
             >
-              <div
-                className={`max-w-[70%] rounded-lg px-4 py-2 ${
-                  message.sender_id === currentUserId
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-foreground"
-                }`}
-              >
-                <p className="text-sm">{message.content}</p>
-                <p className="text-xs opacity-70 mt-1">
-                  {new Date(message.created_at).toLocaleTimeString()}
-                </p>
-              </div>
+              <p className="whitespace-pre-wrap break-words">{message.content}</p>
+              <p className="text-xs opacity-70 mt-1">
+                {new Date(message.created_at).toLocaleTimeString()}
+              </p>
             </div>
-          ))}
-          <div ref={messagesEndRef} />
-        </CardContent>
-
-        <div className="border-t p-4">
-          <div className="flex gap-2">
-            <Input
-              placeholder="Type a message..."
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
-            />
-            <Button onClick={sendMessage} size="icon">
-              <Send className="h-4 w-4" />
-            </Button>
           </div>
+        ))}
+      </div>
+
+      {/* Fixed Input at bottom */}
+      <div className="fixed bottom-0 left-0 right-0 border-t bg-card px-6 py-4">
+        <div className="max-w-4xl mx-auto flex gap-2">
+          <Input
+            placeholder="Type a message..."
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            onKeyPress={handleKeyPress}
+            className="flex-1"
+          />
+          <Button onClick={sendMessage} size="icon">
+            <Send className="h-4 w-4" />
+          </Button>
         </div>
-      </Card>
+      </div>
     </div>
   );
 };
