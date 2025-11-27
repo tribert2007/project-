@@ -10,6 +10,8 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import AIAssistant from "./pages/AIAssistant";
 import StudentProfile from "./pages/StudentProfile";
+import JobGiverProfile from "./pages/JobGiverProfile";
+import MentorProfile from "./pages/MentorProfile";
 import Messages from "./pages/Messages";
 import Chat from "./pages/Chat";
 import InterviewRequests from "./pages/InterviewRequests";
@@ -76,6 +78,8 @@ const App = () => {
                 <Route path="/dashboard" element={<AppLayout><Dashboard /></AppLayout>} />
                 <Route path="/ai-assistant" element={<AppLayout><AIAssistant /></AppLayout>} />
                 <Route path="/profile" element={<AppLayout><StudentProfile /></AppLayout>} />
+                <Route path="/job-giver-profile" element={<AppLayout><JobGiverProfile /></AppLayout>} />
+                <Route path="/mentor-profile" element={<AppLayout><MentorProfile /></AppLayout>} />
                 <Route path="/messages" element={<AppLayout><Messages /></AppLayout>} />
                 <Route path="/chat/:conversationId" element={<AppLayout><Chat /></AppLayout>} />
                 <Route path="/interview-requests" element={<AppLayout><InterviewRequests /></AppLayout>} />
