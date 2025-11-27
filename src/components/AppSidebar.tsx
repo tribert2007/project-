@@ -30,6 +30,7 @@ const studentItems = [
 
 const jobGiverItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
+  { title: "Company Profile", url: "/job-giver-profile", icon: Briefcase },
   { title: "Browse Students", url: "/students", icon: Users },
   { title: "Interview Requests", url: "/interview-requests", icon: Mail },
   { title: "Messages", url: "/messages", icon: MessageSquare },
@@ -38,7 +39,7 @@ const jobGiverItems = [
 
 const mentorItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
-  { title: "My Profile", url: "/profile", icon: Award },
+  { title: "My Profile", url: "/mentor-profile", icon: Award },
   { title: "Students", url: "/students", icon: Users },
   { title: "Messages", url: "/messages", icon: MessageSquare },
   { title: "AI Assistant", url: "/ai-assistant", icon: Sparkles },
