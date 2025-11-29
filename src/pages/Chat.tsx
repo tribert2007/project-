@@ -155,7 +155,6 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Messages - with bottom padding for fixed input */}
       <div className="flex-1 overflow-y-auto px-6 py-4 pb-24 space-y-4">
         {messages.map((message) => (
           <div
@@ -181,7 +180,6 @@ const Chat = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Fixed Input at bottom */}
       <div className="fixed bottom-0 left-0 right-0 border-t bg-card px-6 py-4">
         <div className="max-w-4xl mx-auto flex gap-2">
           <Input

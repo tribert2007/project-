@@ -1,7 +1,5 @@
--- Create user role enum
 CREATE TYPE public.user_role AS ENUM ('student', 'job_giver', 'mentor');
 
--- Create profiles table
 CREATE TABLE public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email TEXT NOT NULL,
@@ -26,7 +24,6 @@ CREATE POLICY "Users can insert own profile"
   ON public.profiles FOR INSERT
   WITH CHECK (auth.uid() = id);
 
--- Create student_profiles table
 CREATE TABLE public.student_profiles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
@@ -57,7 +54,6 @@ CREATE POLICY "Students can insert own profile"
   ON public.student_profiles FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
--- Create achievements table
 CREATE TABLE public.achievements (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   student_id UUID NOT NULL REFERENCES public.student_profiles(user_id) ON DELETE CASCADE,
@@ -78,7 +74,6 @@ CREATE POLICY "Students can manage own achievements"
   ON public.achievements FOR ALL
   USING (auth.uid() = student_id);
 
--- Create job_giver_profiles table
 CREATE TABLE public.job_giver_profiles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
@@ -106,7 +101,6 @@ CREATE POLICY "Job givers can insert own profile"
   ON public.job_giver_profiles FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
--- Create mentor_profiles table
 CREATE TABLE public.mentor_profiles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
@@ -136,7 +130,6 @@ CREATE POLICY "Mentors can insert own profile"
   ON public.mentor_profiles FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
--- Create interview_requests table
 CREATE TABLE public.interview_requests (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   job_giver_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
@@ -160,7 +153,6 @@ CREATE POLICY "Students can update interview requests sent to them"
   ON public.interview_requests FOR UPDATE
   USING (auth.uid() = student_id);
 
--- Create chat_conversations table
 CREATE TABLE public.chat_conversations (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user1_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
@@ -179,7 +171,6 @@ CREATE POLICY "Users can create conversations"
   ON public.chat_conversations FOR INSERT
   WITH CHECK (auth.uid() = user1_id);
 
--- Create chat_messages table
 CREATE TABLE public.chat_messages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   conversation_id UUID NOT NULL REFERENCES public.chat_conversations(id) ON DELETE CASCADE,
@@ -211,7 +202,6 @@ CREATE POLICY "Users can send messages in their conversations"
     )
   );
 
--- Create trigger function for profiles
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER
 LANGUAGE plpgsql
@@ -230,13 +220,11 @@ BEGIN
 END;
 $$;
 
--- Create trigger for new users
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW
   EXECUTE FUNCTION public.handle_new_user();
 
--- Create updated_at trigger function
 CREATE OR REPLACE FUNCTION public.update_updated_at_column()
 RETURNS TRIGGER
 LANGUAGE plpgsql
@@ -247,7 +235,6 @@ BEGIN
 END;
 $$;
 
--- Add updated_at triggers
 CREATE TRIGGER update_profiles_updated_at
   BEFORE UPDATE ON public.profiles
   FOR EACH ROW
@@ -268,5 +255,4 @@ CREATE TRIGGER update_mentor_profiles_updated_at
   FOR EACH ROW
   EXECUTE FUNCTION public.update_updated_at_column();
 
--- Enable realtime for chat
 ALTER PUBLICATION supabase_realtime ADD TABLE public.chat_messages;
