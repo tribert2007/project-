@@ -19,7 +19,7 @@ interface MentorProfile {
   availability: string | null;
 }
 
-const FindMentor = () => {
+const FindAssist = () => {
   const navigate = useNavigate();
   const [mentors, setMentors] = useState<MentorProfile[]>([]);
   const [loading, setLoading] = useState(true);
@@ -64,7 +64,8 @@ const FindMentor = () => {
 
   return (
     <div className="container max-w-6xl py-8">
-      <h1 className="text-3xl font-bold text-foreground mb-6">Find a Mentor</h1>
+      <h1 className="text-3xl font-bold text-foreground mb-6">Find Assist - Jobs & Mentors</h1>
+      <p className="text-muted-foreground mb-6">Connect with experienced mentors and find job opportunities</p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {mentors.map((mentor) => (
           <Card key={mentor.id} className="hover:shadow-lg transition-shadow">
@@ -126,4 +127,4 @@ const FindMentor = () => {
   );
 };
 
-export default FindMentor;
+export default FindAssist;

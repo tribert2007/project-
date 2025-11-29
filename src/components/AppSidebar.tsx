@@ -24,25 +24,22 @@ const studentItems = [
   { title: "My Profile", url: "/profile", icon: GraduationCap },
   { title: "Interview Requests", url: "/interview-requests", icon: Mail },
   { title: "Messages", url: "/messages", icon: MessageSquare },
-  { title: "Find Mentors", url: "/mentors", icon: Award },
+  { title: "Find Assist", url: "/find-assist", icon: Award },
   { title: "AI Assistant", url: "/ai-assistant", icon: Sparkles },
 ];
 
 const jobGiverItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "Company Profile", url: "/job-giver-profile", icon: Briefcase },
-  { title: "Browse Students", url: "/students", icon: Users },
+  { title: "Browse Students", url: "/browse-students", icon: Users },
   { title: "Interview Requests", url: "/interview-requests", icon: Mail },
   { title: "Messages", url: "/messages", icon: MessageSquare },
-  { title: "AI Assistant", url: "/ai-assistant", icon: Sparkles },
 ];
 
 const mentorItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "My Profile", url: "/mentor-profile", icon: Award },
-  { title: "Students", url: "/students", icon: Users },
   { title: "Messages", url: "/messages", icon: MessageSquare },
-  { title: "AI Assistant", url: "/ai-assistant", icon: Sparkles },
 ];
 
 export function AppSidebar() {
