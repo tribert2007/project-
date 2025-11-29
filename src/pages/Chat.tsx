@@ -156,7 +156,7 @@ const Chat = () => {
       </div>
 
       {/* Messages - with bottom padding for fixed input */}
-      <div className="flex-1 overflow-y-auto px-6 py-4 pb-24 space-y-4" ref={messagesEndRef}>
+      <div className="flex-1 overflow-y-auto px-6 py-4 pb-24 space-y-4">
         {messages.map((message) => (
           <div
             key={message.id}
@@ -178,6 +178,7 @@ const Chat = () => {
             </div>
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Fixed Input at bottom */}
