@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { AvatarUpload } from "@/components/AvatarUpload";
 
 const profileSchema = z.object({
   bio: z.string().max(500).optional(),
@@ -24,6 +25,8 @@ type ProfileFormData = z.infer<typeof profileSchema>;
 export const MentorProfileEditor = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState<string>("");
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
   const profileForm = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
@@ -43,6 +46,18 @@ export const MentorProfileEditor = () => {
   const loadProfile = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
+
+    setUserId(user.id);
+
+    const { data: profileData } = await supabase
+      .from("profiles")
+      .select("avatar_url")
+      .eq("id", user.id)
+      .single();
+
+    if (profileData) {
+      setAvatarUrl(profileData.avatar_url);
+    }
 
     const { data } = await supabase
       .from("mentor_profiles")
@@ -107,6 +122,13 @@ export const MentorProfileEditor = () => {
           <CardDescription>Update your mentorship details</CardDescription>
         </CardHeader>
         <CardContent>
+          <div className="mb-6 flex justify-center">
+            <AvatarUpload
+              userId={userId}
+              currentAvatarUrl={avatarUrl}
+              onUploadComplete={(url) => setAvatarUrl(url)}
+            />
+          </div>
           <Form {...profileForm}>
             <form onSubmit={profileForm.handleSubmit(onSubmitProfile)} className="space-y-4">
               <FormField

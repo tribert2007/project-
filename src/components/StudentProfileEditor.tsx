@@ -11,6 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Plus, Trash2 } from "lucide-react";
+import { AvatarUpload } from "@/components/AvatarUpload";
 
 const profileSchema = z.object({
   bio: z.string().max(500).optional(),
@@ -47,6 +48,7 @@ export const StudentProfileEditor = () => {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [showAchievementForm, setShowAchievementForm] = useState(false);
   const [userId, setUserId] = useState<string>("");
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
   const profileForm = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
@@ -82,6 +84,16 @@ export const StudentProfileEditor = () => {
     if (!user) return;
 
     setUserId(user.id);
+
+    const { data: profileData } = await supabase
+      .from("profiles")
+      .select("avatar_url")
+      .eq("id", user.id)
+      .single();
+
+    if (profileData) {
+      setAvatarUrl(profileData.avatar_url);
+    }
 
     const { data } = await supabase
       .from("student_profiles")
@@ -235,6 +247,13 @@ export const StudentProfileEditor = () => {
               <CardDescription>Update your academic and professional information</CardDescription>
             </CardHeader>
             <CardContent>
+              <div className="mb-6 flex justify-center">
+                <AvatarUpload
+                  userId={userId}
+                  currentAvatarUrl={avatarUrl}
+                  onUploadComplete={(url) => setAvatarUrl(url)}
+                />
+              </div>
               <Form {...profileForm}>
                 <form onSubmit={profileForm.handleSubmit(onSubmitProfile)} className="space-y-4">
                   <FormField
