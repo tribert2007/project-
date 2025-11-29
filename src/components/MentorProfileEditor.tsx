@@ -118,7 +118,7 @@ export const MentorProfileEditor = () => {
       
       <Card>
         <CardHeader>
-          <CardTitle>Edit Mentor Information</CardTitle>
+          <CardTitle>Edit Your Information</CardTitle>
           <CardDescription>Update your mentorship details</CardDescription>
         </CardHeader>
         <CardContent>

@@ -192,7 +192,7 @@ export const JobGiverProfileEditor = () => {
                 name="company_website"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Company Website</FormLabel>
+                    <FormLabel>Company Web</FormLabel>
                     <FormControl>
                       <Input placeholder="https://yourcompany.com" {...field} />
                     </FormControl>
