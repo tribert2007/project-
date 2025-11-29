@@ -20,7 +20,7 @@ const prompts = [
   },
   {
     icon: BookOpen,
-    text: "How do I prepare for job interviews?",
+    text: "How do I prepare for job interview?",
   },
 ];
 

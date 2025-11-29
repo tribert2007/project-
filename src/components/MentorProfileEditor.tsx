@@ -138,7 +138,7 @@ export const MentorProfileEditor = () => {
                   <FormItem>
                     <FormLabel>Bio</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Tell students about yourself" {...field} />
+                      <Textarea placeholder="Tell about yourself" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -152,7 +152,7 @@ export const MentorProfileEditor = () => {
                   <FormItem>
                     <FormLabel>Expertise (comma-separated)</FormLabel>
                     <FormControl>
-                      <Input placeholder="Career Guidance, Technical Skills, Leadership" {...field} />
+                      <Input placeholder="Career Guidance, Technical Skills, Leadership .." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -188,7 +188,7 @@ export const MentorProfileEditor = () => {
                       <FormControl>
                         <Input 
                           type="number" 
-                          placeholder="5" 
+                          placeholder="2" 
                           {...field}
                           onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : null)}
                           value={field.value ?? ""}
