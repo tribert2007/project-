@@ -5,7 +5,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, ExternalLink } from "lucide-react";
+import { MessageSquare, ExternalLink, Mail } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 
 interface StudentProfile {
   id: string;
@@ -21,14 +31,33 @@ interface StudentProfile {
 
 const BrowseStudents = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [students, setStudents] = useState<StudentProfile[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentUserId, setCurrentUserId] = useState<string>("");
+  const [currentUserRole, setCurrentUserRole] = useState<string>("");
+  const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
+  const [interviewMessage, setInterviewMessage] = useState("");
+  const [sendingRequest, setSendingRequest] = useState(false);
 
   useEffect(() => {
     loadStudents();
   }, []);
 
   const loadStudents = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      setCurrentUserId(user.id);
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+      if (profile) {
+        setCurrentUserRole(profile.role);
+      }
+    }
+
     const { data: studentProfiles } = await supabase
       .from("student_profiles")
       .select("*, profiles!inner(full_name)");
@@ -56,6 +85,46 @@ const BrowseStudents = () => {
 
   const startChat = (userId: string) => {
     navigate(`/messages?contact=${userId}`);
+  };
+
+  const sendInterviewRequest = async (studentId: string) => {
+    if (!interviewMessage.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a message",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSendingRequest(true);
+    try {
+      const { error } = await supabase
+        .from("interview_requests")
+        .insert({
+          student_id: studentId,
+          job_giver_id: currentUserId,
+          message: interviewMessage.trim(),
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Interview request sent successfully",
+      });
+
+      setInterviewMessage("");
+      setSelectedStudent(null);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setSendingRequest(false);
+    }
   };
 
   if (loading) {
@@ -111,24 +180,75 @@ const BrowseStudents = () => {
               {student.bio && (
                 <p className="text-sm text-muted-foreground line-clamp-2">{student.bio}</p>
               )}
-              <div className="flex gap-2 pt-2">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => viewProfile(student.user_id)}
-                  className="flex-1 gap-2"
-                >
-                  <ExternalLink className="h-4 w-4" />
-                  View Profile
-                </Button>
-                <Button
-                  size="sm"
-                  onClick={() => startChat(student.user_id)}
-                  className="flex-1 gap-2"
-                >
-                  <MessageSquare className="h-4 w-4" />
-                  Contact
-                </Button>
+              <div className="space-y-2">
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => viewProfile(student.user_id)}
+                    className="flex-1 gap-2"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                    View Profile
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={() => startChat(student.user_id)}
+                    className="flex-1 gap-2"
+                  >
+                    <MessageSquare className="h-4 w-4" />
+                    Contact
+                  </Button>
+                </div>
+                {currentUserRole === "job_giver" && (
+                  <Dialog open={selectedStudent === student.user_id} onOpenChange={(open) => !open && setSelectedStudent(null)}>
+                    <DialogTrigger asChild>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => setSelectedStudent(student.user_id)}
+                        className="w-full gap-2"
+                      >
+                        <Mail className="h-4 w-4" />
+                        Request Interview
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Request Interview</DialogTitle>
+                        <DialogDescription>
+                          Send an interview request to {student.full_name}
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <Textarea
+                          placeholder="Write your message..."
+                          value={interviewMessage}
+                          onChange={(e) => setInterviewMessage(e.target.value)}
+                          rows={5}
+                        />
+                        <div className="flex gap-2">
+                          <Button
+                            onClick={() => sendInterviewRequest(student.user_id)}
+                            disabled={sendingRequest || !interviewMessage.trim()}
+                            className="flex-1"
+                          >
+                            Send Request
+                          </Button>
+                          <Button
+                            variant="outline"
+                            onClick={() => {
+                              setSelectedStudent(null);
+                              setInterviewMessage("");
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                )}
               </div>
             </CardContent>
           </Card>

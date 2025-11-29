@@ -15,6 +15,7 @@ interface Conversation {
   other_user_name: string;
   other_user_role: string;
   last_message?: string;
+  unread_count?: number;
 }
 
 interface AvailableUser {
@@ -78,17 +79,25 @@ const Messages = () => {
 
           const { data: lastMessage } = await supabase
             .from("chat_messages")
-            .select("content")
+            .select("content, sender_id")
             .eq("conversation_id", convo.id)
             .order("created_at", { ascending: false })
             .limit(1)
             .maybeSingle();
+
+          // Count unread messages (messages sent by the other user)
+          const { count: unreadCount } = await supabase
+            .from("chat_messages")
+            .select("*", { count: "exact", head: true })
+            .eq("conversation_id", convo.id)
+            .eq("sender_id", otherUserId);
 
           return {
             ...convo,
             other_user_name: profile?.full_name || "Unknown",
             other_user_role: profile?.role || "",
             last_message: lastMessage?.content,
+            unread_count: unreadCount || 0,
           };
         })
       );
@@ -271,9 +280,16 @@ const Messages = () => {
                         <h3 className="font-semibold text-foreground truncate">
                           {convo.other_user_name}
                         </h3>
-                        <Badge variant="outline" className="capitalize">
-                          {convo.other_user_role.replace("_", " ")}
-                        </Badge>
+                        <div className="flex items-center gap-2">
+                          {convo.unread_count! > 0 && (
+                            <Badge variant="default" className="bg-primary">
+                              {convo.unread_count}
+                            </Badge>
+                          )}
+                          <Badge variant="outline" className="capitalize">
+                            {convo.other_user_role.replace("_", " ")}
+                          </Badge>
+                        </div>
                       </div>
                       {convo.last_message && (
                         <p className="text-sm text-muted-foreground truncate mt-1">
