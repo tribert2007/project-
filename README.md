@@ -1,6 +1,9 @@
 # Welcome to your Ejo Hazaza project
 
 ## Project info
+Ejo Hazaza is generally for students who have finished their studies in 
+secondary schools and they are in need of a job and also employers who need employees
+so it will connect both of them since they need each other and exchange contacts.
 
 ## How can I edit this code?
 
